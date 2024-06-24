@@ -1,0 +1,5 @@
+1. Create UI for game -- done
+2. Create user input -- done
+3. Create win condition -- done
+4. Error handling -- in progress
+5. Create Solver -- in progress

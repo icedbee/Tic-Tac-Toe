@@ -1,5 +1,5 @@
 import numpy as np
-from solver import solver, win_con
+from solver import findBestMove, win_con
 
 def UI_Print(grid:np.ndarray, x:bool) -> None:
     for i in range(len(grid)):
@@ -60,6 +60,7 @@ if __name__ == "__main__":
             grid[int(p1_input[0])-1][int(p1_input[1])-1] = 1
             if turn_count > 2:
                 if win_con(grid, 1):
+                    print(f"Player 1 has won the game!")
                     UI_Print(grid, x)
                     p_again = input("Would you like to play again? (y/n)\n")
                     if p_again == 'n':
@@ -78,12 +79,24 @@ if __name__ == "__main__":
                     break
             
             if ai:
-                solver(grid)
+                move = findBestMove(grid)
+                grid[move[0]][move[1]] = 2
+                print(f'The computer has gone to the coordinates {move[0]+1},{move[1]+1}!')
+                if turn_count > 2:
+                    if win_con(grid, 3):
+                        print(f"The computer has won the game!")
+                        UI_Print(grid, x)
+                        p_again = input("Would you like to play again? (y/n)\n")
+                        if p_again == 'n':
+                            exit(0)
+                        else:
+                            break
             else:
                 p2_input = input("What column and row would player 2 like to go in? (please input your answer as \"row,column\")\n").split(",")
                 grid[int(p2_input[0])-1][int(p2_input[1])-1] = 2
                 if turn_count > 2:
                     if win_con(grid, 2):
+                        print(f"Player 2 has won the game!")
                         UI_Print(grid, x)
                         p_again = input("Would you like to play again? (y/n)\n")
                         if p_again == 'n':

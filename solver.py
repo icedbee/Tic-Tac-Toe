@@ -1,35 +1,46 @@
 import numpy as np
 
-player, opponent = 3, 1
-
-def win_con(grid:np.ndarray, player:int) -> bool:
-    for i in range(3):
-        if np.array_equal(grid[i], np.array([player, player, player])):
-            return True
-
-        if (grid[0][i] == grid[1][i] == grid[2][i]) and grid[0][i] == player:
-            return True
-
-    if (grid[0][2] == grid[1][1] == grid[2][0]) and grid[0][2] == player:
-        return True
-
-    if (grid[0][0] == grid[1][1] == grid[2][2]) and grid[0][0] == player:
-        return True
-    
-    return False
+comp, opponent = 3, 1
 
 def isMovesLeft(grid):
-    for i in range(len(grid)):
-        for j in range(len(grid[i])):
+    for i in range(3):
+        for j in range(3):
             if grid[i][j] == 0:
                 return True
     return False
 
-def solver(grid, depth, isMax):
-    tmp_grid = np.copy(grid)
-    score = 0
-    if win_con(tmp_grid, player):
-        score = 10
+def win_con(grid:np.ndarray, player:int) -> bool:
+    for row in range(3):
+        if grid[row][0] == grid[row][1] and grid[row][1] == grid[row][2]: #np.array_equal(grid[i], np.array([player, player, player])):
+            if (grid[row][0] == player) and (player == 2 or player == 3):
+                return True, 10
+            elif (grid[row][0] == player) and (player == 1):
+                return True, -10
+
+    for col in range(3):
+        if (grid[0][col] == grid[1][col]) and (grid[1][col] == grid[2][col]):
+            if (grid[0][col] == player) and (player == 2 or player == 3):
+                return True, 10
+            elif (grid[0][col] == player) and (player == 1):
+                return True, -10
+
+    if (grid[0][2] == grid[1][1] == grid[2][0]):
+        if (grid[0][2] == player) and (player == 2 or player == 3):
+            return True, 10
+        elif (grid[0][2] == player) and (player == 1):
+            return True, -10
+
+    if (grid[0][0] == grid[1][1] == grid[2][2]) and grid[0][0] == player:
+        if (grid[0][0] == player) and (player == 2 or player == 3):
+            return True, 10
+        elif (grid[0][0] == player) and (player == 1):
+            return True, -10
+    
+    return False, 0
+
+#def solver(grid, depth, isMax):
+def solver(grid, isMax):
+    _, score = win_con(grid, comp)
 
     if score == 10:
         return score
@@ -41,34 +52,34 @@ def solver(grid, depth, isMax):
         return 0
 
     if isMax:
-        best = -10
-        for i in range(len(tmp_grid)):
-            for j in range(len(tmp_grid[i])):
+        best = -1000
+        for i in range(3):
+            for j in range(3):
                 if grid[i][j] == 0:
-                    grid[i][j] = player
+                    grid[i][j] = comp
 
-                    best = max(best, solver(grid, depth+1, not isMax))
+                    best = max(best, solver(grid, not isMax))
 
                     grid[i][j] = 0
         return best
     else:
-        best = 10
-        for i in range(len(tmp_grid)):
-            for j in range(len(tmp_grid[i])):
+        best = 1000
+        for i in range(3):
+            for j in range(3):
                 if grid[i][j] == 0:
                     grid[i][j] = opponent
-                    best = min(best, solver(grid, depth+1, not isMax))
+                    best = min(best, solver(grid, not isMax))
                     grid[i][j] = 0
         return best
     
 def findBestMove(grid):
-    bestVal = -10
+    bestVal = -1000
     bestMove = (-1, -1)
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             if grid[i][j] == 0:
-                grid[i][j] = player
-                moveVal = solver(grid, 0, False)
+                grid[i][j] = comp
+                moveVal = solver(grid, False)
                 grid[i][j] = 0
 
                 if moveVal > bestVal:

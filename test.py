@@ -155,8 +155,8 @@ def findBestMove(board) :
 	return bestMove 
 # Driver code 
 board = [ 
-	[ 'x', 'o', 'x' ], 
-	[ 'o', 'o', 'x' ], 
+	[ 'O', '-', '-' ], 
+	[ '-', '-', '-' ], 
 	[ '_', '_', '_' ] 
 ] 
 

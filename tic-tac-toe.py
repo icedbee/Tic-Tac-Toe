@@ -9,7 +9,7 @@ def UI_Print(grid:np.ndarray, x:bool) -> None:
                     print(" X ", end="")
                 else:
                     print(" O ", end="")
-            elif num == 2:
+            elif num == 2 or num == 3:
                 if x:
                     print(" O ", end="")
                 else:
@@ -59,7 +59,8 @@ if __name__ == "__main__":
             p1_input = input("What column and row would player 1 like to go in? (please input your answer as \"row,column\")\n").split(",")
             grid[int(p1_input[0])-1][int(p1_input[1])-1] = 1
             if turn_count > 2:
-                if win_con(grid, 1):
+                won, _ = win_con(grid, 1)
+                if won:
                     print(f"Player 1 has won the game!")
                     UI_Print(grid, x)
                     p_again = input("Would you like to play again? (y/n)\n")
@@ -80,10 +81,11 @@ if __name__ == "__main__":
             
             if ai:
                 move = findBestMove(grid)
-                grid[move[0]][move[1]] = 2
+                grid[move[0]][move[1]] = 3
                 print(f'The computer has gone to the coordinates {move[0]+1},{move[1]+1}!')
                 if turn_count > 2:
-                    if win_con(grid, 3):
+                    won, _ = win_con(grid, 3)
+                    if won:
                         print(f"The computer has won the game!")
                         UI_Print(grid, x)
                         p_again = input("Would you like to play again? (y/n)\n")
@@ -95,7 +97,8 @@ if __name__ == "__main__":
                 p2_input = input("What column and row would player 2 like to go in? (please input your answer as \"row,column\")\n").split(",")
                 grid[int(p2_input[0])-1][int(p2_input[1])-1] = 2
                 if turn_count > 2:
-                    if win_con(grid, 2):
+                    won, _ = win_con(grid, 2)
+                    if won:
                         print(f"Player 2 has won the game!")
                         UI_Print(grid, x)
                         p_again = input("Would you like to play again? (y/n)\n")
